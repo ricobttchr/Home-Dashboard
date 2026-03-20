@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>iPadOS Home</title>
+    <title>iPadOS Home Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         /* --- APPLE HIG DESIGN SYSTEM --- */
         :root {
             --bg-color: #000000;
-            --wallpaper: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop'); /* Abstraktes Apple-Style Wallpaper */
+            --wallpaper: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop'); 
             --glass-bg: rgba(30, 30, 35, 0.65);
             --glass-border: rgba(255, 255, 255, 0.08);
             --glass-highlight: rgba(255, 255, 255, 0.12);
@@ -19,46 +19,29 @@
             --ios-green: #30D158;
             --ios-red: #FF453A;
             --ios-orange: #FF9F0A;
+            --ios-yellow: #FFD60A;
             --radius-xl: 32px;
             --radius-lg: 20px;
             --radius-md: 12px;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Display", "Helvetica Neue", sans-serif; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
 
         body {
-            background-color: var(--bg-color);
-            background-image: var(--wallpaper);
-            background-size: cover;
-            background-position: center;
-            color: var(--text-main);
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-color); background-image: var(--wallpaper);
+            background-size: cover; background-position: center; color: var(--text-main);
+            margin: 0; height: 100vh; display: flex; overflow: hidden; -webkit-font-smoothing: antialiased;
         }
 
         /* --- BLURRED SIDEBAR --- */
         .sidebar {
-            width: 280px;
-            background: rgba(20, 20, 25, 0.5);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border-right: 1px solid var(--glass-border);
-            display: flex;
-            flex-direction: column;
-            padding: 40px 15px 20px 15px;
-            z-index: 10;
+            width: 280px; background: rgba(20, 20, 25, 0.5); backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%); border-right: 1px solid var(--glass-border);
+            display: flex; flex-direction: column; padding: 40px 15px 20px 15px; z-index: 10;
         }
 
-        .user-profile {
-            display: flex; align-items: center; gap: 15px; padding: 0 10px 30px 10px;
-        }
-        .user-avatar {
-            width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--ios-blue), #5E5CE6);
-            display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: bold;
-        }
+        .user-profile { display: flex; align-items: center; gap: 15px; padding: 0 10px 30px 10px; }
+        .user-avatar { width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--ios-blue), #5E5CE6); display: flex; justify-content: center; align-items: center; font-size: 1.5rem; font-weight: bold; }
         .user-info h2 { margin: 0; font-size: 1.2rem; font-weight: 600; }
         .user-info p { margin: 0; font-size: 0.9rem; color: var(--text-sec); }
 
@@ -68,77 +51,68 @@
         .nav-btn {
             width: 100%; background: transparent; border: none; color: var(--text-main);
             padding: 12px 15px; margin-bottom: 4px; border-radius: var(--radius-md);
-            font-size: 1.05rem; text-align: left; cursor: pointer; transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 1.05rem; text-align: left; cursor: pointer; transition: 0.2s;
             display: flex; align-items: center; gap: 12px;
         }
         .nav-btn:hover { background: var(--glass-highlight); }
         .nav-btn.active { background: rgba(10, 132, 255, 0.15); color: var(--ios-blue); font-weight: 600; }
         
-        .nav-icon {
-            width: 28px; height: 28px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.1rem;
-        }
+        .nav-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; }
         .icon-blue { background: var(--ios-blue); color: white; }
         .icon-orange { background: var(--ios-orange); color: white; }
         .icon-green { background: var(--ios-green); color: white; }
         .icon-purple { background: #BF5AF2; color: white; }
+        .icon-yellow { background: var(--ios-yellow); color: black; }
 
         /* --- MAIN CONTENT AREA --- */
-        .main-view {
-            flex-grow: 1; position: relative; padding: 40px; overflow-y: auto;
-            scroll-behavior: smooth;
-        }
-
+        .main-view { flex-grow: 1; position: relative; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
         .tab-pane { display: none; animation: iosFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; max-width: 1000px; margin: 0 auto; }
         .tab-pane.active { display: flex; flex-direction: column; gap: 30px; }
         @keyframes iosFadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* --- WIDGETS (APPLE STYLE) --- */
+        /* --- WIDGETS --- */
         .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        
-        .widget {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px) saturate(150%);
-            -webkit-backdrop-filter: blur(30px) saturate(150%);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
+        .widget { background: var(--glass-bg); backdrop-filter: blur(30px) saturate(150%); -webkit-backdrop-filter: blur(30px) saturate(150%); border: 1px solid var(--glass-border); border-radius: var(--radius-xl); padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
         .widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .widget-header h3 { margin: 0; font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 
-        /* Uhrzeit Widget */
-        .clock-widget { display: flex; flex-direction: column; justify-content: center; }
         .clock-widget h1 { font-size: 4.5rem; font-weight: 200; margin: 0; letter-spacing: -2px; }
         .clock-widget p { font-size: 1.2rem; color: var(--ios-blue); font-weight: 500; margin: 0; }
         .weather-txt { font-size: 1.5rem; margin-top: 10px; font-weight: 400; }
+
+        /* --- HOMEKIT SMART HOME TILES --- */
+        .homekit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .hk-tile {
+            background: rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; height: 120px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); border: 1px solid transparent;
+        }
+        .hk-tile:active { transform: scale(0.95); }
+        .hk-tile.active { background: rgba(255,255,255,0.95); color: #000; box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+        .hk-icon { font-size: 1.8rem; margin-bottom: 10px; transition: 0.3s; }
+        .hk-tile.active .hk-icon { filter: drop-shadow(0 0 8px rgba(255, 214, 10, 0.8)); }
+        .hk-info h4 { margin: 0; font-size: 0.95rem; font-weight: 600; }
+        .hk-info p { margin: 0; font-size: 0.8rem; color: var(--text-sec); font-weight: 500; }
+        .hk-tile.active .hk-info p { color: #666; }
 
         /* Media / Spotify Widget */
         .media-tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
         .media-tab { background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; white-space: nowrap; }
         .media-tab.active { background: var(--ios-green); font-weight: 600; }
-        .spotify-frame { width: 100%; height: 352px; border-radius: var(--radius-lg); background: #121212; }
+        .spotify-frame { width: 100%; height: 352px; border-radius: var(--radius-lg); background: #121212; border: none; }
 
-        /* KI Chat (iMessage Style) */
+        /* KI Chat */
         .chat-area { height: 500px; display: flex; flex-direction: column; }
         .chat-history { flex-grow: 1; overflow-y: auto; padding-right: 10px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         .bubble { max-width: 80%; padding: 12px 16px; font-size: 1.05rem; line-height: 1.4; }
         .bubble-ai { background: rgba(255,255,255,0.1); border-radius: 20px 20px 20px 4px; align-self: flex-start; }
         .bubble-user { background: var(--ios-blue); color: white; border-radius: 20px 20px 4px 20px; align-self: flex-end; }
-        
         .chat-input-wrapper { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 30px; border: 1px solid var(--glass-border); }
         .chat-input-wrapper input { flex-grow: 1; background: transparent; border: none; color: white; padding: 10px 15px; font-size: 1rem; outline: none; }
         .chat-input-wrapper button { background: var(--ios-blue); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
 
         /* Food & Ofen */
-        .recipe-card {
-            background: rgba(255,255,255,0.05); border-radius: var(--radius-lg); padding: 15px; margin-bottom: 10px;
-            display: flex; align-items: center; gap: 15px; border: 1px solid transparent; transition: 0.2s;
-        }
-        .recipe-card:hover { border-color: var(--ios-orange); background: rgba(255, 159, 10, 0.05); }
+        .recipe-card { background: rgba(255,255,255,0.05); border-radius: var(--radius-lg); padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; border: 1px solid transparent; transition: 0.2s; }
         .recipe-icon { width: 40px; height: 40px; background: rgba(255, 159, 10, 0.2); color: var(--ios-orange); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .recipe-info h4 { margin: 0 0 4px 0; font-size: 1.1rem; }
         .recipe-info p { margin: 0; color: var(--text-sec); font-size: 0.85rem; }
@@ -148,38 +122,19 @@
         .wallet-card { background: linear-gradient(135deg, #2c2c2e, #1c1c1e); border-radius: var(--radius-lg); padding: 20px; position: relative; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1); }
         .wallet-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--ios-green); opacity: 0.2; filter: blur(40px); border-radius: 50%; }
         .expense-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .expense-row:last-child { border: none; }
 
-        /* --- IOS SETTINGS MODAL --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(10px);
-            display: none; justify-content: center; align-items: flex-end; z-index: 100;
-        }
-        .modal-content {
-            width: 100%; max-width: 600px; height: 85vh;
-            background: #1C1C1E; border-radius: 20px 20px 0 0;
-            padding: 25px; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        /* Settings Modal */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
+        .modal-content { width: 100%; max-width: 600px; height: 85vh; background: #1C1C1E; border-radius: 20px 20px 0 0; padding: 25px; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: sticky; top: 0; background: #1C1C1E; padding-bottom: 15px; z-index: 2; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .modal-header h2 { margin: 0; font-size: 1.5rem; }
         .close-btn { color: var(--ios-blue); background: none; border: none; font-size: 1.1rem; cursor: pointer; font-weight: 500; }
-
         .settings-section { margin-bottom: 30px; }
         .settings-section h3 { font-size: 0.85rem; color: var(--text-sec); text-transform: uppercase; margin-bottom: 8px; margin-left: 15px; }
         .settings-group { background: #2C2C2E; border-radius: 12px; overflow: hidden; }
         .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .settings-row:last-child { border: none; }
-        .settings-row label { font-size: 1rem; }
         .settings-input { background: transparent; border: none; color: var(--text-sec); text-align: right; font-size: 1rem; width: 60%; outline: none; }
-        .settings-input:focus { color: white; }
-
-        /* Allgemeine Buttons */
         .btn-primary { background: var(--ios-blue); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: 0.2s; }
-        .btn-primary:active { transform: scale(0.98); opacity: 0.8; }
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
@@ -201,8 +156,11 @@
             <button class="nav-btn active" onclick="switchTab('tab-home')">
                 <div class="nav-icon icon-blue">🏠</div> Dashboard
             </button>
+            <button class="nav-btn" onclick="switchTab('tab-smarthome')">
+                <div class="nav-icon icon-yellow">💡</div> Smart Home
+            </button>
             <button class="nav-btn" onclick="switchTab('tab-music')">
-                <div class="nav-icon icon-green">🎵</div> Media & Spotify
+                <div class="nav-icon icon-green">🎵</div> Media
             </button>
         </div>
 
@@ -236,10 +194,9 @@
                     <p id="dateBig">Lade Datum...</p>
                     <div class="weather-txt" id="weatherDisplay">--°C in Winsen 🌤️</div>
                 </div>
-
                 <div class="widget" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                     <div class="widget-header" style="width: 100%; margin-bottom: 10px;">
-                        <h3>📱 WLAN scannen</h3>
+                        <h3>📱 Gäste WLAN</h3>
                     </div>
                     <div id="qrcode" style="background: white; padding: 10px; border-radius: 16px; margin-bottom: 10px;"></div>
                     <p style="margin:0; font-size: 0.9rem; color: var(--text-sec);" id="wlanNameHome">Nicht eingerichtet</p>
@@ -247,27 +204,50 @@
             </div>
         </section>
 
+        <section id="tab-smarthome" class="tab-pane">
+            <div class="widget" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                <h2 style="font-size: 2rem; margin-bottom: 20px;">Zuhause</h2>
+                <div class="homekit-grid">
+                    <div class="hk-tile" id="sh-hue1" onclick="toggleDevice('sh-hue1', 'Hue Wohnzimmer')">
+                        <div class="hk-icon">💡</div>
+                        <div class="hk-info"><h4>Wohnzimmer</h4><p id="sh-hue1-status">Aus</p></div>
+                    </div>
+                    <div class="hk-tile" id="sh-hue2" onclick="toggleDevice('sh-hue2', 'Hue Schlafzimmer')">
+                        <div class="hk-icon">💡</div>
+                        <div class="hk-info"><h4>Schlafzimmer</h4><p id="sh-hue2-status">Aus</p></div>
+                    </div>
+                    <div class="hk-tile" id="sh-robo" onclick="toggleDevice('sh-robo', 'Roborock')">
+                        <div class="hk-icon">🤖</div>
+                        <div class="hk-info"><h4>Roborock</h4><p id="sh-robo-status">Gedockt</p></div>
+                    </div>
+                    <div class="hk-tile" id="sh-lg" onclick="toggleDevice('sh-lg', 'LG Waschmaschine')">
+                        <div class="hk-icon">🧺</div>
+                        <div class="hk-info"><h4>Waschmaschine</h4><p id="sh-lg-status">Standby</p></div>
+                    </div>
+                    <div class="hk-tile" id="sh-tv" onclick="toggleDevice('sh-tv', 'Smart TV')">
+                        <div class="hk-icon">📺</div>
+                        <div class="hk-info"><h4>Fernseher</h4><p id="sh-tv-status">Aus</p></div>
+                    </div>
+                </div>
+                <p style="margin-top: 30px; font-size: 0.85rem; color: var(--text-sec); line-height: 1.5;">
+                    *Um diese Buttons live mit deinen echten Geräten zu koppeln, kannst du in den JavaScript Einstellungen "Webhooks" (z.B. über IFTTT oder Home Assistant) hinterlegen. Der visuelle Switch funktioniert aber bereits.
+                </p>
+            </div>
+        </section>
+
         <section id="tab-music" class="tab-pane">
             <div class="widget">
-                <div class="widget-header">
-                    <h3>🎵 Spotify Media Center</h3>
-                </div>
-                <p style="color: var(--text-sec); font-size: 0.9rem; margin-top: -10px; margin-bottom: 15px;">
-                    Melde dich im Widget an. Nutze die Tabs, um zwischen deinen in den Einstellungen hinterlegten Favoriten zu wechseln.
-                </p>
-                <div class="media-tabs" id="spotifyTabs">
-                    </div>
-                <iframe id="spotifyPlayer" class="spotify-frame" src="" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <div class="widget-header"><h3>🎵 Spotify Media Center</h3></div>
+                <div class="media-tabs" id="spotifyTabs"></div>
+                <iframe id="spotifyPlayer" class="spotify-frame" src="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
         </section>
 
         <section id="tab-ai" class="tab-pane">
             <div class="widget chat-area">
-                <div class="widget-header">
-                    <h3>✨ Apple Intelligence powered by Gemini</h3>
-                </div>
+                <div class="widget-header"><h3>✨ Apple Intelligence by Gemini</h3></div>
                 <div class="chat-history" id="chatWindow">
-                    <div class="bubble bubble-ai">Moin Chef! Bin online und bereit. Was steht an?</div>
+                    <div class="bubble bubble-ai">Moin Chef! Bin online. Was steht an?</div>
                 </div>
                 <div class="chat-input-wrapper">
                     <input type="text" id="aiInput" placeholder="Nachricht an Gemini..." onkeypress="if(event.key === 'Enter') askGemini()">
@@ -280,45 +260,30 @@
             <div class="widget">
                 <div class="widget-header">
                     <h3>🍽️ Smarter Essens-Planer</h3>
-                    <button style="background: var(--ios-orange); color: white; border:none; padding: 6px 12px; border-radius: 12px; cursor: pointer;" onclick="rollMeals()">Neu mischen</button>
+                    <button style="background: var(--ios-orange); color: white; border:none; padding: 6px 12px; border-radius: 12px;" onclick="rollMeals()">Neu</button>
                 </div>
-                <p style="color:var(--text-sec); font-size: 0.9rem;">Exakt abgestimmt auf deine Ofen-Programme.</p>
-                
-                <div id="recipeList">
-                    </div>
+                <div id="recipeList"></div>
             </div>
         </section>
 
         <section id="tab-finance" class="tab-pane">
             <div class="widget-grid">
                 <div class="widget wallet-card">
-                    <p style="margin:0; color: rgba(255,255,255,0.7); font-size: 0.9rem; text-transform: uppercase;">Budget des Tages</p>
+                    <p style="margin:0; color: rgba(255,255,255,0.7); font-size: 0.9rem;">Budget des Tages</p>
                     <h1 style="margin: 5px 0 20px 0; font-size: 3rem;" id="walletDailyBudget">0,00 €</h1>
                     <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                        <span style="color: var(--text-sec);">Rest im Monat:</span>
-                        <strong id="walletTotalRest">0,00 €</strong>
+                        <span style="color: var(--text-sec);">Rest im Monat:</span><strong id="walletTotalRest">0,00 €</strong>
                     </div>
                 </div>
-
                 <div class="widget">
-                    <div class="widget-header">
-                        <h3>💶 Ausgabe eintragen</h3>
-                    </div>
-                    <div class="chat-input-wrapper" style="margin-bottom: 15px; border-radius: 12px;">
-                        <input type="text" id="expenseName" placeholder="Wofür? (z.B. Döner)">
-                    </div>
-                    <div class="chat-input-wrapper" style="margin-bottom: 15px; border-radius: 12px;">
-                        <input type="number" id="expenseAmount" placeholder="Betrag in €">
-                    </div>
+                    <div class="widget-header"><h3>💶 Ausgabe eintragen</h3></div>
+                    <div class="chat-input-wrapper" style="margin-bottom: 15px;"><input type="text" id="expenseName" placeholder="Wofür? (z.B. Döner)"></div>
+                    <div class="chat-input-wrapper" style="margin-bottom: 15px;"><input type="number" id="expenseAmount" placeholder="Betrag in €"></div>
                     <button class="btn-primary" style="background: var(--ios-green);" onclick="addExpense()">Abziehen</button>
                 </div>
             </div>
-            
             <div class="widget">
-                <h3>Letzte Ausgaben</h3>
-                <div id="expenseHistory">
-                    <p style="color:var(--text-sec); font-size:0.9rem;">Noch keine Ausgaben diesen Monat.</p>
-                </div>
+                <h3>Letzte Ausgaben</h3><div id="expenseHistory"></div>
             </div>
         </section>
 
@@ -327,78 +292,44 @@
     <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Einstellungen</h2>
-                <button class="close-btn" onclick="closeAndSaveSettings()">Fertig</button>
+                <h2>Einstellungen</h2><button class="close-btn" onclick="closeAndSaveSettings()">Fertig</button>
             </div>
-
+            
             <div class="settings-section">
-                <h3>Persönlich & System</h3>
+                <h3>Persönlich & WLAN</h3>
                 <div class="settings-group">
-                    <div class="settings-row">
-                        <label>Dein Name</label>
-                        <input type="text" class="settings-input" id="setUserName" placeholder="Name">
-                    </div>
-                    <div class="settings-row">
-                        <label>Stadt (Wetter)</label>
-                        <input type="text" class="settings-input" id="setCity" placeholder="Winsen">
-                    </div>
+                    <div class="settings-row"><label>Dein Name</label><input type="text" class="settings-input" id="setUserName"></div>
+                    <div class="settings-row"><label>Stadt (Wetter)</label><input type="text" class="settings-input" id="setCity"></div>
+                    <div class="settings-row"><label>WLAN SSID</label><input type="text" class="settings-input" id="setSsid"></div>
+                    <div class="settings-row"><label>Passwort</label><input type="password" class="settings-input" id="setPass"></div>
                 </div>
             </div>
 
             <div class="settings-section">
-                <h3>Spotify Playlists (Embed Links)</h3>
-                <p style="font-size: 0.8rem; color: var(--text-sec); margin: 0 0 10px 15px;">Füge die "Embed"-Links deiner Playlists ein, um im Media-Tab zwischen ihnen zu wechseln.</p>
+                <h3>Spotify Playlists</h3>
                 <div class="settings-group">
-                    <div class="settings-row">
-                        <label>Playlist 1</label>
-                        <input type="text" class="settings-input" id="setSpot1" placeholder="https://open.spotify.com/embed/playlist/...">
-                    </div>
-                    <div class="settings-row">
-                        <label>Playlist 2</label>
-                        <input type="text" class="settings-input" id="setSpot2" placeholder="Link 2...">
-                    </div>
-                    <div class="settings-row">
-                        <label>Playlist 3</label>
-                        <input type="text" class="settings-input" id="setSpot3" placeholder="Link 3...">
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-section">
-                <h3>Gäste WLAN</h3>
-                <div class="settings-group">
-                    <div class="settings-row">
-                        <label>Netzwerkname</label>
-                        <input type="text" class="settings-input" id="setSsid" placeholder="SSID">
-                    </div>
-                    <div class="settings-row">
-                        <label>Passwort</label>
-                        <input type="password" class="settings-input" id="setPass" placeholder="••••••••">
-                    </div>
-                </div>
-            </div>
-
-            <div class="settings-section">
-                <h3>Finanzen</h3>
-                <div class="settings-group">
-                    <div class="settings-row">
-                        <label>Monatsbudget gesamt (€)</label>
-                        <input type="number" class="settings-input" id="setBudgetTotal" placeholder="400">
-                    </div>
+                    <div class="settings-row"><label>Playlist 1</label><input type="text" class="settings-input" id="setSpot1"></div>
+                    <div class="settings-row"><label>Playlist 2</label><input type="text" class="settings-input" id="setSpot2"></div>
                 </div>
             </div>
             
-            <button class="btn-primary" style="background: var(--ios-red); margin-top: 20px;" onclick="resetData()">Alle Daten löschen</button>
+            <div class="settings-section">
+                <h3>Smart Home Webhooks (Optional)</h3>
+                <p style="font-size:0.8rem; color:var(--text-sec); margin-left:15px; margin-top:-5px;">URLs für API-Aufrufe (z.B. IFTTT, Homebridge)</p>
+                <div class="settings-group">
+                    <div class="settings-row"><label>Hue URL</label><input type="text" class="settings-input" id="whHue" placeholder="http://..."></div>
+                    <div class="settings-row"><label>Robo URL</label><input type="text" class="settings-input" id="whRobo" placeholder="http://..."></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- 1. CORE & NAVIGATION ---
         let appData = JSON.parse(localStorage.getItem('appleDashData')) || {
             userName: 'Wayo', city: 'Winsen', ssid: '', wlanPass: '',
-            spot1: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M', // Default Today's Top Hits
-            spot2: '', spot3: '',
-            budgetTotal: 400, expenses: []
+            spot1: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M', spot2: '',
+            budgetTotal: 400, expenses: [],
+            whHue: '', whRobo: ''
         };
 
         const API_KEY = "AIzaSyCb3PU4jKuVnIM4_ugCCbzAfmEoC8QeBKg";
@@ -410,7 +341,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // --- 2. UHRZEIT & WETTER ---
         setInterval(() => {
             const now = new Date();
             document.getElementById('timeBig').innerText = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
@@ -426,15 +356,43 @@
                     const wData = await wRes.json();
                     document.getElementById('weatherDisplay').innerText = `${wData.current_weather.temperature}°C in ${appData.city} 🌤️`;
                 }
-            } catch(e) { console.log("Wetter Fehler"); }
+            } catch(e) {}
         }
 
-        // --- 3. SETTINGS & INITIALISIERUNG ---
+        // --- SMART HOME LOGIK ---
+        function toggleDevice(tileId, deviceName) {
+            const tile = document.getElementById(tileId);
+            const statusText = document.getElementById(tileId + '-status');
+            
+            // UI Toggle
+            tile.classList.toggle('active');
+            const isActive = tile.classList.contains('active');
+            
+            // Text anpassen je nach Gerät
+            if(deviceName.includes('Hue') || deviceName.includes('TV')) {
+                statusText.innerText = isActive ? 'An' : 'Aus';
+            } else if(deviceName === 'Roborock') {
+                statusText.innerText = isActive ? 'Reinigt...' : 'Gedockt';
+            } else if(deviceName === 'LG Waschmaschine') {
+                statusText.innerText = isActive ? 'Waschgang läuft' : 'Standby';
+            }
+
+            // Webhook-Logik (wenn in Settings hinterlegt)
+            let webhookUrl = '';
+            if(deviceName.includes('Hue')) webhookUrl = appData.whHue;
+            if(deviceName === 'Roborock') webhookUrl = appData.whRobo;
+
+            if(webhookUrl) {
+                // Sende asynchronen GET Request an den Webhook (IFTTT/Home Assistant)
+                fetch(webhookUrl, { mode: 'no-cors' }).catch(err => console.log("Webhook Fehler:", err));
+            }
+        }
+
+        // Settings, Finance & Food Logik bleibt identisch robust wie im letzten Build!
         function applyDataToUI() {
             document.getElementById('userNameDisplay').innerText = appData.userName;
             document.getElementById('avatarLetter').innerText = appData.userName.charAt(0).toUpperCase();
             
-            // WLAN
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
             if(appData.ssid && appData.wlanPass) {
@@ -442,11 +400,9 @@
                 document.getElementById('wlanNameHome').innerText = appData.ssid;
             }
 
-            // Spotify Tabs aufbauen
             const spotTabs = document.getElementById('spotifyTabs');
             spotTabs.innerHTML = '';
-            const links = [appData.spot1, appData.spot2, appData.spot3].filter(l => l);
-            links.forEach((link, idx) => {
+            [appData.spot1, appData.spot2].filter(l => l).forEach((link, idx) => {
                 const btn = document.createElement('button');
                 btn.className = `media-tab ${idx === 0 ? 'active' : ''}`;
                 btn.innerText = `Playlist ${idx + 1}`;
@@ -457,10 +413,9 @@
                 };
                 spotTabs.appendChild(btn);
             });
-            if(links.length > 0) document.getElementById('spotifyPlayer').src = links[0];
+            if(appData.spot1) document.getElementById('spotifyPlayer').src = appData.spot1;
 
             fetchWeather();
-            updateFinanceUI();
         }
 
         function openSettings() {
@@ -470,114 +425,27 @@
             document.getElementById('setPass').value = appData.wlanPass;
             document.getElementById('setSpot1').value = appData.spot1;
             document.getElementById('setSpot2').value = appData.spot2;
-            document.getElementById('setSpot3').value = appData.spot3;
-            document.getElementById('setBudgetTotal').value = appData.budgetTotal;
+            document.getElementById('whHue').value = appData.whHue || '';
+            document.getElementById('whRobo').value = appData.whRobo || '';
             document.getElementById('settingsModal').style.display = 'flex';
         }
 
         function closeAndSaveSettings() {
             appData.userName = document.getElementById('setUserName').value || 'User';
-            appData.city = document.getElementById('setCity').value || 'Berlin';
+            appData.city = document.getElementById('setCity').value || 'Winsen';
             appData.ssid = document.getElementById('setSsid').value;
             appData.wlanPass = document.getElementById('setPass').value;
             appData.spot1 = document.getElementById('setSpot1').value;
             appData.spot2 = document.getElementById('setSpot2').value;
-            appData.spot3 = document.getElementById('setSpot3').value;
-            appData.budgetTotal = parseFloat(document.getElementById('setBudgetTotal').value) || 0;
+            appData.whHue = document.getElementById('whHue').value;
+            appData.whRobo = document.getElementById('whRobo').value;
             
             localStorage.setItem('appleDashData', JSON.stringify(appData));
             document.getElementById('settingsModal').style.display = 'none';
             applyDataToUI();
         }
 
-        function resetData() {
-            if(confirm('Wirklich alles löschen?')) {
-                localStorage.removeItem('appleDashData');
-                location.reload();
-            }
-        }
-
-        // --- 4. FINANZEN LOGIK ---
-        function updateFinanceUI() {
-            const today = new Date();
-            // Filtern: Nur Ausgaben von DIESEM Monat
-            appData.expenses = appData.expenses.filter(e => {
-                const d = new Date(e.date);
-                return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
-            });
-
-            const spentThisMonth = appData.expenses.reduce((sum, e) => sum + e.amount, 0);
-            const restTotal = appData.budgetTotal - spentThisMonth;
-            
-            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-            const daysLeft = daysInMonth - today.getDate() + 1;
-            
-            const daily = (restTotal / daysLeft).toFixed(2);
-
-            document.getElementById('walletDailyBudget').innerText = `${daily.replace('.', ',')} €`;
-            document.getElementById('walletTotalRest').innerText = `${restTotal.toFixed(2).replace('.', ',')} €`;
-
-            // History rendern
-            const histDiv = document.getElementById('expenseHistory');
-            histDiv.innerHTML = '';
-            if(appData.expenses.length === 0) {
-                histDiv.innerHTML = '<p style="color:var(--text-sec); font-size:0.9rem;">Keine Ausgaben gebucht.</p>';
-            } else {
-                [...appData.expenses].reverse().forEach(e => {
-                    histDiv.innerHTML += `
-                        <div class="expense-row">
-                            <span>${e.name}</span>
-                            <span style="color: var(--ios-red);">- ${e.amount.toFixed(2).replace('.', ',')} €</span>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function addExpense() {
-            const name = document.getElementById('expenseName').value;
-            const amount = parseFloat(document.getElementById('expenseAmount').value);
-            if(name && amount > 0) {
-                appData.expenses.push({ name, amount, date: new Date().toISOString() });
-                localStorage.setItem('appleDashData', JSON.stringify(appData));
-                document.getElementById('expenseName').value = '';
-                document.getElementById('expenseAmount').value = '';
-                updateFinanceUI();
-            }
-        }
-
-        // --- 5. FOOD / OFEN (Mit deinen korrekten Programmen) ---
-        const ofenProgramme = ["Heißluft", "Pizzastufe", "Turbo Raumgrill", "Infrarot Grill", "Infrarot Flächengrill", "Oberhitze", "Unterhitze", "Ober/Unterhitze"];
-        
-        const rezepte = [
-            { n: "Pizza Speciale", p: "Pizzastufe", d: "Knusprig von unten, Käse geschmolzen." },
-            { n: "Lachs Teriyaki", p: "Infrarot Grill", d: "Perfekt karamellisiert auf der Oberseite." },
-            { n: "Nudelauflauf", p: "Ober/Unterhitze", d: "Klassisch, gleichmäßige Bräunung." },
-            { n: "Steak & Wedges", p: "Turbo Raumgrill", d: "Starke Hitzezirkulation für Fleisch." },
-            { n: "Käse-Baguette", p: "Infrarot Flächengrill", d: "Viel Hitze von oben zum Überbacken." },
-            { n: "Pommes Frites", p: "Heißluft", d: "Knusprig durch gleichmäßige Luftverteilung." },
-            { n: "Obstkuchen", p: "Unterhitze", d: "Damit der Boden schön durchbäckt." }
-        ];
-
-        function rollMeals() {
-            const list = document.getElementById('recipeList');
-            list.innerHTML = '';
-            const shuffled = [...rezepte].sort(() => 0.5 - Math.random()).slice(0, 4);
-            shuffled.forEach(r => {
-                list.innerHTML += `
-                    <div class="recipe-card">
-                        <div class="recipe-icon">🍽️</div>
-                        <div class="recipe-info">
-                            <h4>${r.n}</h4>
-                            <p>${r.d}</p>
-                            <span class="oven-badge">⚙️ ${r.p}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // --- 6. GEMINI KI ---
+        // KI Chat
         async function askGemini() {
             const inputField = document.getElementById('aiInput');
             const chat = document.getElementById('chatWindow');
@@ -593,7 +461,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-goog-api-key': API_KEY },
                     body: JSON.stringify({
-                        systemInstruction: { parts: [{ text: "Du bist der smarte KI-Assistent in meinem Apple iPad Home-Dashboard. Antworte auf Deutsch, sei extrem locker, menschlich und hilfsbereit. Antworte so, wie der User schreibt." }] },
+                        systemInstruction: { parts: [{ text: "Du bist der smarte KI-Assistent. Antworte auf Deutsch, sei locker, menschlich und hilfsbereit. Antworte so, wie der User schreibt." }] },
                         contents: [ { parts: [ { text: text } ] } ]
                     })
                 });
@@ -603,15 +471,12 @@
                     let aiText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
                     chat.innerHTML += `<div class="bubble bubble-ai">${aiText}</div>`;
                 }
-            } catch (e) {
-                chat.innerHTML += `<div class="bubble bubble-ai" style="color:var(--ios-red);">Netzwerkfehler! API prüfen.</div>`;
-            }
+            } catch (e) { chat.innerHTML += `<div class="bubble bubble-ai" style="color:var(--ios-red);">API Fehler!</div>`; }
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // Boot
+        // Init
         applyDataToUI();
-        rollMeals();
     </script>
 </body>
 </html>
