@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iPad Life-Cockpit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>iPad Life-Cockpit Pro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         /* --- iOS SYSTEM STYLES --- */
@@ -11,274 +11,264 @@
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             --glass-bg: rgba(30, 41, 59, 0.6);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-active: rgba(255, 255, 255, 0.15);
             --ios-blue: #0A84FF;
             --ios-green: #30D158;
-            --ios-red: #FF453A;
             --text-main: #ffffff;
             --text-sec: #ebebf599;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
             background: var(--bg-gradient);
             background-attachment: fixed;
             color: var(--text-main);
             margin: 0;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            overflow: hidden; /* Verhindert das Scrollen der ganzen Seite */
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- IPAD GRID LAYOUT --- */
-        .dashboard-container {
-            width: 95%;
-            height: 95%;
-            max-width: 1180px; /* iPad Air Landscape optimal */
-            display: grid;
-            grid-template-columns: 320px 1fr 320px;
-            grid-template-rows: auto 1fr;
-            gap: 20px;
-        }
-
-        /* --- WIDGET / GLASSMORPHISM --- */
-        .widget {
-            background: var(--glass-bg);
+        /* --- IPADOS SIDEBAR LAYOUT --- */
+        .sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            padding: 20px 10px;
+            z-index: 10;
         }
 
-        h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0 0 15px 0;
+        .sidebar-title {
+            padding: 0 15px 20px 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
             letter-spacing: -0.5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        /* --- CLOCK & HEADER --- */
-        .header-widget {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-        }
-
-        .clock-container h1 {
-            font-size: 3rem;
-            margin: 0;
-            font-weight: 200;
-            letter-spacing: -1px;
-        }
-        .clock-container p { margin: 0; color: var(--text-sec); font-size: 1.1rem; }
-
-        .weather-info {
-            text-align: right;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-        .weather-info span { color: var(--text-sec); font-size: 1rem; display: block; }
-
-        /* --- LEFT COLUMN (AI & WLAN) --- */
-        .col-left { display: flex; flex-direction: column; gap: 20px; grid-column: 1; grid-row: 2; }
-
-        .ai-chat { flex-grow: 1; display: flex; flex-direction: column; }
-        .chat-window {
-            flex-grow: 1;
-            background: rgba(0,0,0,0.2);
-            border-radius: 14px;
-            padding: 10px;
-            margin-bottom: 15px;
-            overflow-y: auto;
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-        .msg-user { color: var(--ios-blue); text-align: right; margin-bottom: 8px; }
-        .msg-ai { color: var(--text-main); margin-bottom: 12px; }
-        
-        input[type="text"] {
-            background: rgba(255,255,255,0.1);
+        .nav-btn {
+            background: transparent;
             border: none;
-            padding: 12px 15px;
+            color: var(--text-main);
+            padding: 15px 20px;
+            margin-bottom: 8px;
             border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-        input::placeholder { color: var(--text-sec); }
-
-        /* --- MIDDLE COLUMN (Spotify & Food) --- */
-        .col-main { display: flex; flex-direction: column; gap: 20px; grid-column: 2; grid-row: 2; }
-        
-        .spotify-widget { padding: 0; border: none; background: transparent; backdrop-filter: none; box-shadow: none; }
-        
-        .meal-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        .meal-card {
-            background: rgba(255,255,255,0.08);
-            padding: 15px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .meal-details h3 { margin: 0 0 5px 0; font-size: 1rem; font-weight: 500; }
-        .meal-details p { margin: 0; font-size: 0.85rem; color: var(--text-sec); }
-        .btn-ios {
-            background: var(--ios-blue);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            text-align: left;
             cursor: pointer;
             transition: 0.2s;
-            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .btn-ios:active { transform: scale(0.98); opacity: 0.8; }
 
-        /* --- RIGHT COLUMN (Finance & Setup) --- */
-        .col-right { display: flex; flex-direction: column; gap: 20px; grid-column: 3; grid-row: 2; }
+        .nav-btn:hover { background: rgba(255,255,255,0.05); }
+        .nav-btn.active { background: var(--glass-active); font-weight: 600; color: var(--ios-blue); }
 
-        .finance-widget h1 { margin: 10px 0; font-size: 2.5rem; font-weight: 300; color: var(--ios-green); }
-        
-        .setup-group { margin-bottom: 15px; }
-        .setup-group label { display: block; font-size: 0.85rem; color: var(--text-sec); margin-bottom: 5px; }
-        .setup-group input { width: 100%; box-sizing: border-box; }
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            overflow-y: auto; /* Erlaubt scrollen innerhalb des aktiven Reiters */
+            padding: 30px;
+        }
 
-        #qrcode {
-            background: white;
-            padding: 15px;
+        .tab-pane {
+            display: none; /* Standardmäßig versteckt */
+            animation: fadeIn 0.3s ease-in-out;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tab-pane.active { display: flex; flex-direction: column; gap: 25px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- WIDGETS --- */
+        .widget {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 { margin: 0 0 20px 0; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+
+        /* Header / Uhrzeit */
+        .top-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
+        .clock h1 { font-size: 4rem; margin: 0; font-weight: 200; letter-spacing: -2px; }
+        .clock p { margin: 0; color: var(--text-sec); font-size: 1.2rem; }
+        .weather { text-align: right; font-size: 1.5rem; }
+        .weather span { display: block; color: var(--text-sec); font-size: 1rem; }
+
+        /* KI Chat */
+        .chat-container { height: 60vh; display: flex; flex-direction: column; }
+        .chat-window {
+            flex-grow: 1;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
             border-radius: 16px;
-            align-self: center;
-            margin-top: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+        .msg-user { color: var(--ios-blue); text-align: right; margin-bottom: 15px; background: rgba(10, 132, 255, 0.1); padding: 10px 15px; border-radius: 18px 18px 0 18px; display: inline-block; float: right; clear: both;}
+        .msg-ai { color: var(--text-main); margin-bottom: 15px; background: rgba(255, 255, 255, 0.05); padding: 10px 15px; border-radius: 18px 18px 18px 0; display: inline-block; float: left; clear: both; }
+        
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 14px;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
         }
 
-        /* Scrollbar ausblenden für cleanen Look */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        /* Food Grid */
+        .meal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .meal-card { background: rgba(255,255,255,0.08); padding: 20px; border-radius: 16px; }
+        .meal-card h3 { margin: 0 0 5px 0; }
+        .meal-card p { margin: 0; color: var(--ios-blue); font-weight: 600; font-size: 0.9rem; }
+
+        .btn-ios {
+            background: var(--ios-blue); color: white; border: none; padding: 15px 25px;
+            border-radius: 14px; font-weight: 600; font-size: 1.1rem; cursor: pointer; width: 100%; margin-top: 10px;
+        }
+
+        /* Settings Group */
+        .setup-group { margin-bottom: 20px; }
+        .setup-group label { display: block; margin-bottom: 8px; color: var(--text-sec); }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <div class="header-widget">
-            <div class="clock-container">
-                <h1 id="timeDisplay">00:00</h1>
-                <p id="dateDisplay">Montag, 1. Januar</p>
-            </div>
-            <div class="weather-info">
-                <div id="weatherTemp">--°C 🌤️</div>
-                <span id="weatherCity">Winsen</span>
-            </div>
-        </div>
+    <aside class="sidebar">
+        <div class="sidebar-title">Wayo Cockpit</div>
+        <button class="nav-btn active" onclick="switchTab('tab-home')">🏠 Home</button>
+        <button class="nav-btn" onclick="switchTab('tab-ai')">✨ Gemini KI</button>
+        <button class="nav-btn" onclick="switchTab('tab-food')">🍽️ Ofen & Essen</button>
+        <button class="nav-btn" onclick="switchTab('tab-finance')">💰 Budget & Setup</button>
+    </aside>
 
-        <div class="col-left">
-            <div class="widget ai-chat">
+    <main class="main-content">
+        
+        <section id="tab-home" class="tab-pane active">
+            <div class="top-header">
+                <div class="clock">
+                    <h1 id="timeDisplay">00:00</h1>
+                    <p id="dateDisplay">Lade Datum...</p>
+                </div>
+                <div class="weather">
+                    <div id="weatherTemp">--°C 🌤️</div>
+                    <span>Winsen</span>
+                </div>
+            </div>
+
+            <div class="widget" style="padding: 0; overflow: hidden; border: none;">
+                <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="widget" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>📱 Gäste-WLAN</h2>
+                    <p style="color: var(--text-sec);" id="wlanInfo">Netzwerk nicht konfiguriert</p>
+                </div>
+                <div id="qrcode" style="background: white; padding: 10px; border-radius: 12px;"></div>
+            </div>
+        </section>
+
+        <section id="tab-ai" class="tab-pane">
+            <div class="widget chat-container">
                 <h2>✨ Gemini Assistent</h2>
                 <div class="chat-window" id="chatWindow">
-                    <div class="msg-ai">Hallo Chef! Die API steht. Was gibt's?</div>
+                    <div class="msg-ai">Moin Chef! Ich bin bereit. Was steht an?</div>
+                    <div style="clear:both;"></div>
                 </div>
-                <input type="text" id="aiInput" placeholder="Frag mich was..." onkeypress="if(event.key === 'Enter') askGemini()">
+                <input type="text" id="aiInput" placeholder="Schreib eine Nachricht..." onkeypress="if(event.key === 'Enter') askGemini()">
             </div>
+        </section>
 
-            <div class="widget" style="align-items: center;">
-                <h2>📱 Gäste-WLAN</h2>
-                <div id="qrcode"></div>
-                <p id="wlanInfo" style="color: var(--text-sec); font-size: 0.9rem; margin-top: 15px;">WLAN-Daten in den Settings eintragen</p>
+        <section id="tab-food" class="tab-pane">
+            <div class="widget">
+                <h2>🍽️ Was gibt's heute?</h2>
+                <p style="color: var(--text-sec); margin-bottom: 20px;">Deine Ofen-Programme sind direkt hinterlegt.</p>
+                <div class="meal-grid" id="mealList"></div>
+                <button class="btn-ios" style="margin-top: 25px;" onclick="rollMeals()">Neue Gerichte würfeln</button>
             </div>
-        </div>
+        </section>
 
-        <div class="col-main">
-            <div class="widget spotify-widget">
-                <iframe style="border-radius:24px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-
-            <div class="widget" style="flex-grow: 1;">
-                <h2>🍽️ Ofen- & Essens-Planer</h2>
-                <div class="meal-list" id="mealList" style="margin-bottom: 20px;">
-                    </div>
-                <button class="btn-ios" onclick="rollMeals()" style="margin-top: auto;">Neu mischen</button>
-            </div>
-        </div>
-
-        <div class="col-right">
-            <div class="widget finance-widget">
-                <h2>💸 Budget heute</h2>
-                <h1 id="dailyBudget">0,00 €</h1>
-                <div class="setup-group" style="margin-top: 10px;">
+        <section id="tab-finance" class="tab-pane">
+            <div class="widget">
+                <h2>💸 Tages-Budget</h2>
+                <h1 id="dailyBudget" style="font-size: 3.5rem; margin: 10px 0; color: var(--ios-green);">0,00 €</h1>
+                <div class="setup-group">
                     <label>Monatsbudget gesamt (€)</label>
                     <input type="number" id="budgetInput" onchange="calcBudget()" placeholder="Z.B. 400">
                 </div>
             </div>
 
-            <div class="widget" style="flex-grow: 1; overflow-y: auto;">
-                <h2>⚙️ Lokale Settings</h2>
+            <div class="widget">
+                <h2>⚙️ Lokale WLAN Einstellungen</h2>
                 <div class="setup-group">
                     <label>WLAN Name (SSID)</label>
-                    <input type="text" id="setSsid" placeholder="Netzwerkname">
+                    <input type="text" id="setSsid" placeholder="Fritz!Box...">
                 </div>
                 <div class="setup-group">
                     <label>WLAN Passwort</label>
                     <input type="password" id="setPass" placeholder="Passwort">
                 </div>
-                <button class="btn-ios" style="margin-top: 10px; background: rgba(255,255,255,0.2);" onclick="saveSettings()">Speichern & QR generieren</button>
+                <button class="btn-ios" style="background: rgba(255,255,255,0.2);" onclick="saveSettings()">Speichern & QR generieren</button>
             </div>
-        </div>
-    </div>
+        </section>
+
+    </main>
 
     <script>
-        // --- 1. CLOCK & DATE ---
-        function updateClock() {
+        // --- 0. TAB NAVIGATION ---
+        function switchTab(tabId) {
+            // Alle Tabs verstecken
+            document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            // Ziel-Tab anzeigen
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- 1. UHR & DATUM ---
+        setInterval(() => {
             const now = new Date();
             document.getElementById('timeDisplay').innerText = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
             document.getElementById('dateDisplay').innerText = now.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        }, 1000);
 
-        // --- 2. WEATHER (Winsen Default) ---
+        // --- 2. WETTER (Winsen) ---
         async function fetchWeather() {
             try {
-                // Koordinaten für Winsen (Luhe)
-                const lat = 53.3639;
-                const lon = 10.2104;
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=53.3639&longitude=10.2104&current_weather=true`);
                 const data = await res.json();
                 document.getElementById('weatherTemp').innerText = `${data.current_weather.temperature}°C`;
-            } catch(e) {
-                document.getElementById('weatherTemp').innerText = "Offline";
-            }
+            } catch(e) { console.log("Wetter Fehler"); }
         }
         fetchWeather();
-        setInterval(fetchWeather, 3600000); // 1x pro Stunde
 
-        // --- 3. SETTINGS & WLAN QR ---
+        // --- 3. WLAN SETTINGS ---
         function loadSettings() {
-            const savedSsid = localStorage.getItem('iosSsid') || '';
-            const savedPass = localStorage.getItem('iosPass') || '';
-            const savedBudget = localStorage.getItem('iosBudget') || '';
-
-            document.getElementById('setSsid').value = savedSsid;
-            document.getElementById('setPass').value = savedPass;
-            document.getElementById('budgetInput').value = savedBudget;
-
-            generateQR(savedSsid, savedPass);
+            const ssid = localStorage.getItem('iosSsid') || '';
+            const pass = localStorage.getItem('iosPass') || '';
+            document.getElementById('setSsid').value = ssid;
+            document.getElementById('setPass').value = pass;
+            document.getElementById('budgetInput').value = localStorage.getItem('iosBudget') || '';
+            
+            generateQR(ssid, pass);
             calcBudget();
         }
 
@@ -294,56 +284,42 @@
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = ""; 
             if(ssid && pass) {
-                const wifiString = `WIFI:S:${ssid};T:WPA;P:${pass};;`;
-                new QRCode(qrContainer, { text: wifiString, width: 140, height: 140, colorDark : "#000", colorLight : "#fff", correctLevel : QRCode.CorrectLevel.L });
+                new QRCode(qrContainer, { text: `WIFI:S:${ssid};T:WPA;P:${pass};;`, width: 120, height: 120 });
                 document.getElementById('wlanInfo').innerText = `Verbunden mit: ${ssid}`;
-            } else {
-                document.getElementById('wlanInfo').innerText = "Bitte Daten eintragen.";
             }
         }
 
-        // --- 4. FINANCE BUDGET ---
+        // --- 4. BUDGET ---
         function calcBudget() {
             const val = document.getElementById('budgetInput').value;
             localStorage.setItem('iosBudget', val);
             const total = parseFloat(val) || 0;
-            
             const today = new Date();
-            const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-            const daysLeft = daysInMonth - today.getDate() + 1;
-            
-            const daily = (total / daysLeft).toFixed(2);
-            document.getElementById('dailyBudget').innerText = `${daily.replace('.', ',')} €`;
+            const daysLeft = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() - today.getDate() + 1;
+            document.getElementById('dailyBudget').innerText = `${(total / daysLeft).toFixed(2).replace('.', ',')} €`;
         }
 
-        // --- 5. MEAL ROULETTE ---
+        // --- 5. MEAL ROULETTE (Mit deinen exakten Programmen) ---
         const meals = [
-            { n: "Pizza Napoli", o: "Pizzastufe | 220°C" },
-            { n: "Lachs Teriyaki", o: "Infrarot Grill | 200°C" },
-            { n: "Kartoffelauflauf", o: "Ober/Unterhitze | 200°C" },
-            { n: "Steak & Wedges", o: "Turbo Raumgrill | 210°C" },
-            { n: "Überbackenes Toast", o: "Infrarot Flächengrill | 220°C" },
-            { n: "Chicken Wings", o: "Heißluft | 200°C" }
+            { n: "Selbstgemachte Pizza", o: "Pizzastufe" },
+            { n: "Nudelauflauf", o: "Ober/Unterhitze" },
+            { n: "Steak & Potato Wedges", o: "Turbo Raumgrill" },
+            { n: "Lachsfilet", o: "Infrarot Grill" },
+            { n: "Überbackenes Baguette", o: "Infrarot Flächengrill" },
+            { n: "Chicken Wings / Pommes", o: "Heißluft" },
+            { n: "Rührkuchen", o: "Unterhitze, dann Oberhitze" }
         ];
 
         function rollMeals() {
             const list = document.getElementById('mealList');
             list.innerHTML = '';
-            const shuffled = [...meals].sort(() => 0.5 - Math.random()).slice(0, 3);
-            
+            const shuffled = [...meals].sort(() => 0.5 - Math.random()).slice(0, 4);
             shuffled.forEach(m => {
-                list.innerHTML += `
-                    <div class="meal-card">
-                        <div class="meal-details">
-                            <h3>${m.n}</h3>
-                            <p>🔥 ${m.o}</p>
-                        </div>
-                    </div>
-                `;
+                list.innerHTML += `<div class="meal-card"><h3>${m.n}</h3><p>🔥 ${m.o}</p></div>`;
             });
         }
 
-        // --- 6. GEMINI AI (100% FIXED NACH DEINEM CURL) ---
+        // --- 6. GEMINI KI (Gefixt & Deutsch) ---
         const API_KEY = "AIzaSyCb3PU4jKuVnIM4_ugCCbzAfmEoC8QeBKg";
 
         async function askGemini() {
@@ -352,43 +328,34 @@
             const text = inputField.value;
             if(!text) return;
 
-            // User Message
-            chat.innerHTML += `<div class="msg-user">${text}</div>`;
+            chat.innerHTML += `<div class="msg-user">${text}</div><div style="clear:both;"></div>`;
             inputField.value = '';
             chat.scrollTop = chat.scrollHeight;
 
             try {
-                // Exakt gebaut nach deinem curl Request
                 const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent", {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-goog-api-key': API_KEY
-                    },
+                    headers: { 'Content-Type': 'application/json', 'X-goog-api-key': API_KEY },
                     body: JSON.stringify({
+                        // Der System-Prompt zwingt die KI auf Deutsch und deinen Stil
+                        systemInstruction: { parts: [{ text: "Du bist der smarte KI-Assistent in meinem iPad Home-Dashboard. Antworte immer auf Deutsch, sei locker, menschlich und hilfsbereit. Fasse dich eher kurz." }] },
                         contents: [ { parts: [ { text: text } ] } ]
                     })
                 });
 
                 const data = await response.json();
-                
-                if(data.candidates && data.candidates.length > 0) {
-                    const aiText = data.candidates[0].content.parts[0].text;
-                    // Simples Markdown Bold (**) zu HTML wandeln für schöneres Lesen
-                    const formattedText = aiText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    chat.innerHTML += `<div class="msg-ai">${formattedText}</div>`;
-                } else {
-                    chat.innerHTML += `<div class="msg-ai" style="color:var(--ios-red);">Fehler: Unerwartete API Antwort.</div>`;
-                    console.error(data);
+                if(data.candidates) {
+                    let aiText = data.candidates[0].content.parts[0].text;
+                    aiText = aiText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    chat.innerHTML += `<div class="msg-ai">${aiText}</div><div style="clear:both;"></div>`;
                 }
             } catch (e) {
-                chat.innerHTML += `<div class="msg-ai" style="color:var(--ios-red);">Fehler: Verbindung fehlgeschlagen.</div>`;
-                console.error(e);
+                chat.innerHTML += `<div class="msg-ai" style="color:#FF453A;">Netzwerkfehler!</div><div style="clear:both;"></div>`;
             }
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // Boot
+        // Init
         loadSettings();
         rollMeals();
     </script>
