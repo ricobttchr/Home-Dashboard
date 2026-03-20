@@ -3,427 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Life-Cockpit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>iPad Life-Cockpit</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        /* --- iOS SYSTEM STYLES --- */
         :root {
-            --bg-dark: #0f172a;
-            --panel-bg: #1e293b;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #10b981;
-            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --ios-blue: #0A84FF;
+            --ios-green: #30D158;
+            --ios-red: #FF453A;
+            --text-main: #ffffff;
+            --text-sec: #ebebf599;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-dark);
+            font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-main);
             margin: 0;
-            display: grid;
-            grid-template-columns: 350px 1fr;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- IPAD GRID LAYOUT --- */
+        .dashboard-container {
+            width: 95%;
+            height: 95%;
+            max-width: 1180px; /* iPad Air Landscape optimal */
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        /* --- WIDGET / GLASSMORPHISM --- */
+        .widget {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- LAYOUT --- */
-        aside {
-            background-color: var(--panel-bg);
-            padding: 25px;
-            border-right: 1px solid #334155;
+        h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            letter-spacing: -0.5px;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        main {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-auto-rows: min-content;
-            gap: 25px;
-            overflow-y: auto;
-        }
-
-        .header-area {
+        /* --- CLOCK & HEADER --- */
+        .header-widget {
             grid-column: 1 / -1;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 15px;
+            padding: 0 10px;
         }
 
-        .settings-btn {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: transform 0.3s;
+        .clock-container h1 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: 200;
+            letter-spacing: -1px;
         }
-        .settings-btn:hover { transform: rotate(90deg); }
+        .clock-container p { margin: 0; color: var(--text-sec); font-size: 1.1rem; }
 
-        /* --- KARTEN DESIGN --- */
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        h2, h3 { margin-top: 0; color: var(--primary); }
-        h1 { margin: 0; }
-
-        input, button, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            background: #0f172a;
-            color: white;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        button {
-            background: var(--primary);
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover { background: var(--primary-hover); }
-
-        /* --- WIDGETS --- */
-        .weather-widget {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .weather-info {
+            text-align: right;
             font-size: 1.2rem;
+            font-weight: 500;
         }
+        .weather-info span { color: var(--text-sec); font-size: 1rem; display: block; }
 
-        #qrcode {
-            background: white;
+        /* --- LEFT COLUMN (AI & WLAN) --- */
+        .col-left { display: flex; flex-direction: column; gap: 20px; grid-column: 1; grid-row: 2; }
+
+        .ai-chat { flex-grow: 1; display: flex; flex-direction: column; }
+        .chat-window {
+            flex-grow: 1;
+            background: rgba(0,0,0,0.2);
+            border-radius: 14px;
             padding: 10px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-top: 15px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
+        .msg-user { color: var(--ios-blue); text-align: right; margin-bottom: 8px; }
+        .msg-ai { color: var(--text-main); margin-bottom: 12px; }
+        
+        input[type="text"] {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        input::placeholder { color: var(--text-sec); }
 
+        /* --- MIDDLE COLUMN (Spotify & Food) --- */
+        .col-main { display: flex; flex-direction: column; gap: 20px; grid-column: 2; grid-row: 2; }
+        
+        .spotify-widget { padding: 0; border: none; background: transparent; backdrop-filter: none; box-shadow: none; }
+        
         .meal-list {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
         }
-
-        .meal-item {
-            background: #334155;
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
-        .meal-item span.oven { font-size: 0.85rem; color: var(--accent); margin-top: 4px; }
-
-        .ai-chatbox {
-            height: 150px;
-            overflow-y: auto;
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            border: 1px solid #334155;
-            margin-bottom: 10px;
-        }
-
-        /* --- SETTINGS MODAL --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal {
-            background: var(--panel-bg);
-            padding: 30px;
+        .meal-card {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
             border-radius: 16px;
-            width: 400px;
-            max-width: 90%;
-            border: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .modal label { font-size: 0.9rem; color: var(--text-muted); display: block; margin-top: 15px; }
+        .meal-details h3 { margin: 0 0 5px 0; font-size: 1rem; font-weight: 500; }
+        .meal-details p { margin: 0; font-size: 0.85rem; color: var(--text-sec); }
+        .btn-ios {
+            background: var(--ios-blue);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .btn-ios:active { transform: scale(0.98); opacity: 0.8; }
+
+        /* --- RIGHT COLUMN (Finance & Setup) --- */
+        .col-right { display: flex; flex-direction: column; gap: 20px; grid-column: 3; grid-row: 2; }
+
+        .finance-widget h1 { margin: 10px 0; font-size: 2.5rem; font-weight: 300; color: var(--ios-green); }
+        
+        .setup-group { margin-bottom: 15px; }
+        .setup-group label { display: block; font-size: 0.85rem; color: var(--text-sec); margin-bottom: 5px; }
+        .setup-group input { width: 100%; box-sizing: border-box; }
+
+        #qrcode {
+            background: white;
+            padding: 15px;
+            border-radius: 16px;
+            align-self: center;
+            margin-top: 10px;
+        }
+
+        /* Scrollbar ausblenden für cleanen Look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
     </style>
 </head>
 <body>
 
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal">
-            <h2>⚙️ Cockpit Setup</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted);">Diese Daten bleiben lokal in deinem Browser gespeichert.</p>
-            
-            <label>Gemini API Key</label>
-            <input type="password" id="setApiKey" placeholder="AI Key eintragen...">
-            
-            <label>WLAN Name (SSID)</label>
-            <input type="text" id="setSsid" placeholder="Z.B. FritzBox_123">
-            
-            <label>WLAN Passwort</label>
-            <input type="password" id="setWlanPass" placeholder="WLAN Passwort">
-            
-            <label>Stadt fürs Wetter</label>
-            <input type="text" id="setCity" placeholder="Z.B. Hamburg">
+    <div class="dashboard-container">
+        <div class="header-widget">
+            <div class="clock-container">
+                <h1 id="timeDisplay">00:00</h1>
+                <p id="dateDisplay">Montag, 1. Januar</p>
+            </div>
+            <div class="weather-info">
+                <div id="weatherTemp">--°C 🌤️</div>
+                <span id="weatherCity">Winsen</span>
+            </div>
+        </div>
 
-            <label>Spotify Playlist Link (Embed)</label>
-            <input type="text" id="setSpotify" placeholder="Spotify Embed URL hier rein...">
+        <div class="col-left">
+            <div class="widget ai-chat">
+                <h2>✨ Gemini Assistent</h2>
+                <div class="chat-window" id="chatWindow">
+                    <div class="msg-ai">Hallo Chef! Die API steht. Was gibt's?</div>
+                </div>
+                <input type="text" id="aiInput" placeholder="Frag mich was..." onkeypress="if(event.key === 'Enter') askGemini()">
+            </div>
 
-            <button style="margin-top: 25px;" onclick="saveSettings()">Speichern & Anwenden</button>
-            <button style="background: var(--danger); margin-top: 10px;" onclick="closeSettings()">Abbrechen</button>
+            <div class="widget" style="align-items: center;">
+                <h2>📱 Gäste-WLAN</h2>
+                <div id="qrcode"></div>
+                <p id="wlanInfo" style="color: var(--text-sec); font-size: 0.9rem; margin-top: 15px;">WLAN-Daten in den Settings eintragen</p>
+            </div>
+        </div>
+
+        <div class="col-main">
+            <div class="widget spotify-widget">
+                <iframe style="border-radius:24px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+
+            <div class="widget" style="flex-grow: 1;">
+                <h2>🍽️ Ofen- & Essens-Planer</h2>
+                <div class="meal-list" id="mealList" style="margin-bottom: 20px;">
+                    </div>
+                <button class="btn-ios" onclick="rollMeals()" style="margin-top: auto;">Neu mischen</button>
+            </div>
+        </div>
+
+        <div class="col-right">
+            <div class="widget finance-widget">
+                <h2>💸 Budget heute</h2>
+                <h1 id="dailyBudget">0,00 €</h1>
+                <div class="setup-group" style="margin-top: 10px;">
+                    <label>Monatsbudget gesamt (€)</label>
+                    <input type="number" id="budgetInput" onchange="calcBudget()" placeholder="Z.B. 400">
+                </div>
+            </div>
+
+            <div class="widget" style="flex-grow: 1; overflow-y: auto;">
+                <h2>⚙️ Lokale Settings</h2>
+                <div class="setup-group">
+                    <label>WLAN Name (SSID)</label>
+                    <input type="text" id="setSsid" placeholder="Netzwerkname">
+                </div>
+                <div class="setup-group">
+                    <label>WLAN Passwort</label>
+                    <input type="password" id="setPass" placeholder="Passwort">
+                </div>
+                <button class="btn-ios" style="margin-top: 10px; background: rgba(255,255,255,0.2);" onclick="saveSettings()">Speichern & QR generieren</button>
+            </div>
         </div>
     </div>
 
-    <aside>
-        <div class="card">
-            <h2>💰 Finance Tracker</h2>
-            <label>Verfügbares Monatsbudget (€)</label>
-            <input type="number" id="budgetInput" oninput="updateBudget()" placeholder="Z.B. 400">
-            <p id="dailyBudgetDisplay" style="font-weight: 600; color: var(--accent); font-size: 1.2rem;"></p>
-        </div>
-
-        <div class="card" style="flex-grow: 1; display: flex; flex-direction: column;">
-            <h2>🧠 KI Assistent</h2>
-            <div class="ai-chatbox" id="aiChatbox">Hallo! Frag mich was oder lass uns quatschen.</div>
-            <input type="text" id="aiInput" placeholder="Deine Frage..." onkeypress="if(event.key === 'Enter') askAI()">
-            <button onclick="askAI()">Senden</button>
-        </div>
-    </aside>
-
-    <main>
-        <div class="header-area">
-            <div>
-                <h1 id="greeting">Moin!</h1>
-                <div class="weather-widget" id="weatherDisplay">Wetter wird geladen... 🌤️</div>
-            </div>
-            <button class="settings-btn" onclick="openSettings()">⚙️</button>
-        </div>
-
-        <section class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-            <h2>📱 Gäste WLAN</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">Einfach scannen zum Verbinden</p>
-            <div id="qrcode"></div>
-            <p id="wlanNameDisplay" style="margin-top: 10px; font-weight: bold;"></p>
-        </section>
-
-        <section class="card">
-            <h2>🍴 Essen & Ofen-Guide</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Zufällige Vorschläge perfekt abgestimmt auf deine Ofen-Programme.</p>
-            <button onclick="rollMeals()">3x Neue Vorschläge generieren</button>
-            <div class="meal-list" id="mealList"></div>
-        </section>
-
-        <section class="card" style="grid-column: 1 / -1;">
-            <h2>🎵 Musik</h2>
-            <iframe id="spotifyFrame" style="border-radius:12px" src="" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </section>
-    </main>
-
     <script>
-        // --- GLOBALE VARIABLEN ---
-        let appSettings = JSON.parse(localStorage.getItem('cockpitSettings')) || {
-            apiKey: '', ssid: '', wlanPass: '', city: 'Berlin', spotify: ''
-        };
-
-        // --- INIT APP ---
-        window.onload = () => {
-            applySettings();
-            updateBudget();
-            rollMeals();
-            setGreeting();
-            
-            // Wenn kein API Key oder WLAN da ist, zeige Settings
-            if(!appSettings.apiKey || !appSettings.ssid) {
-                openSettings();
-            }
-        };
-
-        // --- SETTINGS LOGIC ---
-        function openSettings() {
-            document.getElementById('setApiKey').value = appSettings.apiKey;
-            document.getElementById('setSsid').value = appSettings.ssid;
-            document.getElementById('setWlanPass').value = appSettings.wlanPass;
-            document.getElementById('setCity').value = appSettings.city;
-            document.getElementById('setSpotify').value = appSettings.spotify;
-            document.getElementById('settingsModal').style.display = 'flex';
+        // --- 1. CLOCK & DATE ---
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('timeDisplay').innerText = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('dateDisplay').innerText = now.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
         }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-        function closeSettings() {
-            document.getElementById('settingsModal').style.display = 'none';
+        // --- 2. WEATHER (Winsen Default) ---
+        async function fetchWeather() {
+            try {
+                // Koordinaten für Winsen (Luhe)
+                const lat = 53.3639;
+                const lon = 10.2104;
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                const data = await res.json();
+                document.getElementById('weatherTemp').innerText = `${data.current_weather.temperature}°C`;
+            } catch(e) {
+                document.getElementById('weatherTemp').innerText = "Offline";
+            }
+        }
+        fetchWeather();
+        setInterval(fetchWeather, 3600000); // 1x pro Stunde
+
+        // --- 3. SETTINGS & WLAN QR ---
+        function loadSettings() {
+            const savedSsid = localStorage.getItem('iosSsid') || '';
+            const savedPass = localStorage.getItem('iosPass') || '';
+            const savedBudget = localStorage.getItem('iosBudget') || '';
+
+            document.getElementById('setSsid').value = savedSsid;
+            document.getElementById('setPass').value = savedPass;
+            document.getElementById('budgetInput').value = savedBudget;
+
+            generateQR(savedSsid, savedPass);
+            calcBudget();
         }
 
         function saveSettings() {
-            appSettings = {
-                apiKey: document.getElementById('setApiKey').value,
-                ssid: document.getElementById('setSsid').value,
-                wlanPass: document.getElementById('setWlanPass').value,
-                city: document.getElementById('setCity').value,
-                spotify: document.getElementById('setSpotify').value
-            };
-            localStorage.setItem('cockpitSettings', JSON.stringify(appSettings));
-            closeSettings();
-            applySettings();
+            const ssid = document.getElementById('setSsid').value;
+            const pass = document.getElementById('setPass').value;
+            localStorage.setItem('iosSsid', ssid);
+            localStorage.setItem('iosPass', pass);
+            generateQR(ssid, pass);
         }
 
-        function applySettings() {
-            generateWlanQR();
-            fetchWeather();
-            
-            // Spotify Fallback falls leer
-            const defaultSpotify = "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator";
-            document.getElementById('spotifyFrame').src = appSettings.spotify || defaultSpotify;
-        }
-
-        // --- FEATURES ---
-
-        function setGreeting() {
-            const hour = new Date().getHours();
-            let text = "Moin!";
-            if(hour < 11) text = "Guten Morgen!";
-            else if(hour < 18) text = "Mahlzeit!";
-            else text = "Guten Abend!";
-            document.getElementById('greeting').innerText = text;
-        }
-
-        // 1. WLAN QR Code dynamisch bauen
-        function generateWlanQR() {
+        function generateQR(ssid, pass) {
             const qrContainer = document.getElementById("qrcode");
-            qrContainer.innerHTML = ""; // Clear old code
-            
-            if(appSettings.ssid && appSettings.wlanPass) {
-                // String Format für Android/iOS WLAN Scan: WIFI:S:<SSID>;T:WPA;P:<PASSWORD>;;
-                const wifiString = `WIFI:S:${appSettings.ssid};T:WPA;P:${appSettings.wlanPass};;`;
-                new QRCode(qrContainer, {
-                    text: wifiString,
-                    width: 150,
-                    height: 150,
-                    colorDark : "#0f172a",
-                    colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.L
-                });
-                document.getElementById('wlanNameDisplay').innerText = "Netzwerk: " + appSettings.ssid;
+            qrContainer.innerHTML = ""; 
+            if(ssid && pass) {
+                const wifiString = `WIFI:S:${ssid};T:WPA;P:${pass};;`;
+                new QRCode(qrContainer, { text: wifiString, width: 140, height: 140, colorDark : "#000", colorLight : "#fff", correctLevel : QRCode.CorrectLevel.L });
+                document.getElementById('wlanInfo').innerText = `Verbunden mit: ${ssid}`;
             } else {
-                qrContainer.innerHTML = "<p style='color:black;'>Bitte WLAN Daten in den Settings eintragen.</p>";
+                document.getElementById('wlanInfo').innerText = "Bitte Daten eintragen.";
             }
         }
 
-        // 2. Wetter API (Kostenlos, ohne Key über Open-Meteo)
-        async function fetchWeather() {
-            const city = appSettings.city || 'Berlin';
-            try {
-                // Erst Geocoding (Stadt -> Koordinaten)
-                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=de&format=json`);
-                const geoData = await geoRes.json();
-                
-                if(!geoData.results) throw new Error("Stadt nicht gefunden");
-                const { latitude, longitude, name } = geoData.results[0];
-
-                // Dann Wetter abfragen
-                const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-                const weatherData = await weatherRes.json();
-                
-                const temp = weatherData.current_weather.temperature;
-                document.getElementById('weatherDisplay').innerText = `${name}: ${temp}°C 🌤️`;
-            } catch(e) {
-                document.getElementById('weatherDisplay').innerText = "Wetter offline";
-            }
-        }
-
-        // 3. Finanzen / Budget Rechner
-        function updateBudget() {
-            const inputField = document.getElementById('budgetInput');
-            let total = parseFloat(inputField.value);
+        // --- 4. FINANCE BUDGET ---
+        function calcBudget() {
+            const val = document.getElementById('budgetInput').value;
+            localStorage.setItem('iosBudget', val);
+            const total = parseFloat(val) || 0;
             
-            // Lade Wert aus Storage falls Input leer
-            if(isNaN(total)) {
-                total = parseFloat(localStorage.getItem('cockpitBudget')) || 0;
-                inputField.value = total > 0 ? total : '';
-            } else {
-                localStorage.setItem('cockpitBudget', total);
-            }
-
             const today = new Date();
             const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
             const daysLeft = daysInMonth - today.getDate() + 1;
             
-            const daily = total > 0 ? (total / daysLeft).toFixed(2) : 0.00;
-            document.getElementById('dailyBudgetDisplay').innerText = `${daily} € / Tag übrig`;
+            const daily = (total / daysLeft).toFixed(2);
+            document.getElementById('dailyBudget').innerText = `${daily.replace('.', ',')} €`;
         }
 
-        // 4. Meal Roulette (mit deinen Ofen-Programmen)
+        // --- 5. MEAL ROULETTE ---
         const meals = [
-            { name: "Selbstgemachte Pizza", oven: "Pizzastufe | 220°C | Mittlere Schiene" },
-            { name: "Lachsfilet mit Gemüse", oven: "Infrarot Grill | 200°C | Oben" },
-            { name: "Kartoffelgratin / Auflauf", oven: "Ober/Unterhitze | 200°C | Mitte" },
-            { name: "Pommes & Chicken Nuggets", oven: "Heißluft | 200°C | Verteilt" },
-            { name: "Ganzes Hähnchen", oven: "Turbo Raumgrill | 190°C | Unten" },
-            { name: "Käse-Makkaroni überbacken", oven: "Infrarot Flächengrill | 220°C | Oben" },
-            { name: "Kastenkuchen / Muffins", oven: "Unterhitze (am Ende) & Ober/Unterhitze | 180°C" }
+            { n: "Pizza Napoli", o: "Pizzastufe | 220°C" },
+            { n: "Lachs Teriyaki", o: "Infrarot Grill | 200°C" },
+            { n: "Kartoffelauflauf", o: "Ober/Unterhitze | 200°C" },
+            { n: "Steak & Wedges", o: "Turbo Raumgrill | 210°C" },
+            { n: "Überbackenes Toast", o: "Infrarot Flächengrill | 220°C" },
+            { n: "Chicken Wings", o: "Heißluft | 200°C" }
         ];
 
         function rollMeals() {
             const list = document.getElementById('mealList');
             list.innerHTML = '';
-            // Mischen und 3 nehmen
             const shuffled = [...meals].sort(() => 0.5 - Math.random()).slice(0, 3);
             
             shuffled.forEach(m => {
-                const div = document.createElement('div');
-                div.className = 'meal-item';
-                div.innerHTML = `<strong>${m.name}</strong><span class="oven">🔥 ${m.oven}</span>`;
-                list.appendChild(div);
+                list.innerHTML += `
+                    <div class="meal-card">
+                        <div class="meal-details">
+                            <h3>${m.n}</h3>
+                            <p>🔥 ${m.o}</p>
+                        </div>
+                    </div>
+                `;
             });
         }
 
-        // 5. KI Assistent
-        async function askAI() {
+        // --- 6. GEMINI AI (100% FIXED NACH DEINEM CURL) ---
+        const API_KEY = "AIzaSyCb3PU4jKuVnIM4_ugCCbzAfmEoC8QeBKg";
+
+        async function askGemini() {
             const inputField = document.getElementById('aiInput');
-            const chatbox = document.getElementById('aiChatbox');
+            const chat = document.getElementById('chatWindow');
             const text = inputField.value;
             if(!text) return;
 
-            if(!appSettings.apiKey) {
-                chatbox.innerHTML += `<br><br><b>System:</b> Bitte erst den API Key in den Settings eintragen!`;
-                return;
-            }
-
-            // User Frage anzeigen
-            chatbox.innerHTML += `<br><br><b>Du:</b> ${text}`;
+            // User Message
+            chat.innerHTML += `<div class="msg-user">${text}</div>`;
             inputField.value = '';
-            chatbox.scrollTop = chatbox.scrollHeight;
+            chat.scrollTop = chat.scrollHeight;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${appSettings.apiKey}`, {
+                // Exakt gebaut nach deinem curl Request
+                const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent", {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: text }] }] })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-goog-api-key': API_KEY
+                    },
+                    body: JSON.stringify({
+                        contents: [ { parts: [ { text: text } ] } ]
+                    })
                 });
+
                 const data = await response.json();
-                const aiResponse = data.candidates[0].content.parts[0].text;
                 
-                chatbox.innerHTML += `<br><br><b>Gemini:</b> ${aiResponse}`;
-                chatbox.scrollTop = chatbox.scrollHeight;
+                if(data.candidates && data.candidates.length > 0) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    // Simples Markdown Bold (**) zu HTML wandeln für schöneres Lesen
+                    const formattedText = aiText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    chat.innerHTML += `<div class="msg-ai">${formattedText}</div>`;
+                } else {
+                    chat.innerHTML += `<div class="msg-ai" style="color:var(--ios-red);">Fehler: Unerwartete API Antwort.</div>`;
+                    console.error(data);
+                }
             } catch (e) {
-                chatbox.innerHTML += `<br><br><b>Fehler:</b> Verbindung zur KI fehlgeschlagen.`;
+                chat.innerHTML += `<div class="msg-ai" style="color:var(--ios-red);">Fehler: Verbindung fehlgeschlagen.</div>`;
+                console.error(e);
             }
+            chat.scrollTop = chat.scrollHeight;
         }
+
+        // Boot
+        loadSettings();
+        rollMeals();
     </script>
 </body>
 </html>
